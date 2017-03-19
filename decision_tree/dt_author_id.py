@@ -24,8 +24,14 @@ features_train, features_test, labels_train, labels_test = preprocess()
 
 #########################################################
 ### your code goes here ###
+print "Feature num:",len(features_train[0])
 
-
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+dtc = DecisionTreeClassifier(min_samples_split=40)
+dtc.fit(features_train,labels_train)
+predict = dtc.predict(features_test)
+print "Accuracy:",accuracy_score(y_true=labels_test,y_pred=predict)
 #########################################################
 
 
