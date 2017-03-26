@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import numpy as np
 
 def outlierCleaner(predictions, ages, net_worths):
     """
@@ -14,7 +14,11 @@ def outlierCleaner(predictions, ages, net_worths):
     cleaned_data = []
 
     ### your code goes here
+    outlier_count = int(len(ages)*0.1)
+    cleaned_data = zip(ages,net_worths,abs(net_worths - predictions))
 
-    
+    for i in range(outlier_count):
+        cleaned_data.remove(max(cleaned_data, key=lambda x : x[2]))
+
+    print "%i items removed as outlier" % outlier_count
     return cleaned_data
-
