@@ -42,24 +42,31 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
         temp_counter += 1
-        if temp_counter < 200:
+        if True:#temp_counter < 200:
             path = os.path.join('..', path[:-1])
             print path
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
+            email_content = parseOutText(email)
 
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
+            signature_words = ["sara", "shackleton", "chris", "germani", "sshacklensf", "cgermannsf"]
+            for sw in signature_words:
+                email_content = email_content.replace(sw, "")
 
             ### append the text to word_data
+            word_data.append(email_content)
 
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
-
+            from_data.append(0 if name == "sara" else 1)
 
             email.close()
 
 print "emails processed"
+print "152. Email Content:", word_data[152]
+
 from_sara.close()
 from_chris.close()
 
@@ -71,5 +78,12 @@ pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
 
 ### in Part 4, do TfIdf vectorization here
+from sklearn.feature_extraction.text import TfidfVectorizer
 
+vectorizer = TfidfVectorizer(stop_words="english")
+vectorizer.fit_transform(word_data)
+feature_names = vectorizer.get_feature_names()
+print feature_names
+print "Word Count:", len(feature_names)
+print "Word 34597:", feature_names[34597]
 

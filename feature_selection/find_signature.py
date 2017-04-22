@@ -11,7 +11,7 @@ numpy.random.seed(42)
 words_file = "../text_learning/your_word_data.pkl" 
 authors_file = "../text_learning/your_email_authors.pkl"
 word_data = pickle.load( open(words_file, "r"))
-authors = pickle.load( open(authors_file, "r") )
+authors = pickle.load( open(authors_file, "r"))
 
 
 
@@ -28,7 +28,6 @@ vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5,
 features_train = vectorizer.fit_transform(features_train)
 features_test  = vectorizer.transform(features_test).toarray()
 
-
 ### a classic way to overfit is to use a small number
 ### of data points and a large number of features;
 ### train on only 150 events to put ourselves in this regime
@@ -38,6 +37,15 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+from sklearn.tree import DecisionTreeClassifier
 
+dt = DecisionTreeClassifier()
+dt.fit(X=features_train, y=labels_train)
+print "Accuracy:", dt.score(X=features_test, y=labels_test)
+import numpy as np
+print np.select(dt.feature_importances_ > 0.2,dt.feature_importances_)
+max_importance_index = np.argmax(dt.feature_importances_)
+print "Max importance:", dt.feature_importances_[max_importance_index]
+print "Max importance index:", max_importance_index
 
-
+print vectorizer.get_feature_names()[max_importance_index]
